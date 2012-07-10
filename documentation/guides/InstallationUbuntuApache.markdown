@@ -4,7 +4,7 @@ OpenPhoto / Installation for Ubuntu + Apache
 
 ## OS: Linux Ubuntu Server 10.04+
 
-This guide instructs you on how to install OpenPhoto on an Ubuntu server.
+This guide instructs you on how to install OpenPhoto on an Ubuntu Server.
 
 ----------------------------------------
 
@@ -26,8 +26,10 @@ Once you've confirmed that your cloud account is setup you can get started on yo
 
     apt-get update
     apt-get upgrade
-    apt-get install apache2 php5 libapache2-mod-php5 php5-curl php5-gd php5-mcrypt php-apc build-essential libpcre3-dev
+    apt-get install apache2 php5 libapache2-mod-php5 php5-curl php5-gd php5-mcrypt php-apc build-essential libpcre3-dev php-pear
     a2enmod rewrite
+
+And if you are going to use MySQL install `php5-mysql`.
 
 There are also a few optional but recommended packages and modules.
 
@@ -107,6 +109,10 @@ Search for the following values and make sure they're correct.
     file_uploads = On
     upload_max_filesize = 16M
     post_max_size = 16M
+    
+Search for, and if needed add the following line to load the Oauth Extention.
+
+    extension=oauth.so
 
 Now you're ready to restart apache and visit the site in your browser.
 

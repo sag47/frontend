@@ -53,7 +53,7 @@ class Theme
         break;
       //
       case 'jquery':
-        return $utilityObj->returnValue('/assets/javascripts/jquery-1.6.2.min.js', $write);
+        return $utilityObj->returnValue('/assets/javascripts/jquery-1.7.2.min.js', $write);
         break;
       case 'util':
         return $utilityObj->returnValue('/assets/javascripts/openphoto-util.js', $write);
@@ -109,26 +109,9 @@ class Theme
   public function setTheme($theme = null)
   {
     if($theme === null)
-      $theme = 'beisel';
+      $theme = 'beisel2.0';
     $this->theme = $theme;
     $this->themeDir = sprintf('%s/%s', dirname($this->themeDir), $this->theme);
     $this->themeDirWeb = sprintf('%s/%s', dirname($this->themeDirWeb), $this->theme);
   }
-}
-
-/**
-  * The public interface for instantiating a theme obect.
-  *
-  * @return object A theme object
-  */
-function getTheme($singleton = true)
-{
-  static $theme;
-  if($singleton && !$theme)
-  {
-    $theme = new Theme();
-    return $theme;
-  }
-
-  return new Theme();
 }

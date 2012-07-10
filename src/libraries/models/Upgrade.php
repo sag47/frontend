@@ -136,6 +136,7 @@ class Upgrade extends BaseModel
             $scriptsExist = true;
           }
         }
+        ksort($scripts['base']);
       }
     }
 
@@ -173,6 +174,7 @@ class Upgrade extends BaseModel
             }
           }
         }
+        ksort($scripts['db'][$database]);
       }
     }
 
@@ -284,13 +286,4 @@ class Upgrade extends BaseModel
   {
     include $file;
   }
-}
-
-function getUpgrade()
-{
-  static $upgrade;
-  if(!$upgrade)
-    $upgrade = new Upgrade;
-
-  return $upgrade;
 }

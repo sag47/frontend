@@ -152,10 +152,13 @@ class Credential extends BaseModel
       $cache = array();
 
     list($lastTimestamp, $nonces) = each($cache);
-    if($provider->timestamp > (time()+300) || $provider->timestamp < $lastTimestamp)
+    // change logic to check for request order to include a 5 minute grace period
+    // see #628 and #738 for details
+    if($provider->timestamp > (time()+300) || $provider->timestamp < ($lastTimestamp-300))
     {
       // timestamp can't be more then 30 seconds into the future
       // or prior to the last timestamp
+      $this->logger->warn(sprintf('The provided timestamp of %s did not validate against the current timestamp of %s and lastTimestamp of %s', $provider->timestamp, time(), $lastTimestamp));
       return OAUTH_BAD_TIMESTAMP;
     }
     elseif(isset($cache[$provider->timestamp]))
@@ -273,17 +276,5 @@ class Credential extends BaseModel
   {
     self::$consumer = null;
     self::$requestStatus = null;
-  }
-}
-
-if(!function_exists('getCredential'))
-{
-  function getCredential()
-  {
-    static $credential;
-    if(!$credential)
-      $credential = new Credential;
-
-    return $credential;
   }
 }

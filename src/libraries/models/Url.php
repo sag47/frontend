@@ -15,6 +15,54 @@ class Url
     return $utilityObj->returnValue(sprintf('/action/%s/delete', $utilityObj->safe($id, false)), $write);
   }
 
+  public function albumView($id, $write = true)
+  {
+    $utilityObj = new Utility;
+    return $utilityObj->returnValue(sprintf('/album/%s', $utilityObj->safe($id, false)), $write);
+  }
+
+  public function albumsView($write = true)
+  {
+    $utilityObj = new Utility;
+    return $utilityObj->returnValue('/albums/list', $write);
+  }
+
+  public function manage($write = true)
+  {
+    $utilityObj = new Utility;
+    return $utilityObj->returnValue('/manage', $write);
+  }
+
+  public function manageAlbums($write = true)
+  {
+    $utilityObj = new Utility;
+    return $utilityObj->returnValue('/manage/albums', $write);
+  }
+
+  public function manageApps($write = true)
+  {
+    $utilityObj = new Utility;
+    return $utilityObj->returnValue('/manage/apps', $write);
+  }
+
+  public function manageGroups($write = true)
+  {
+    $utilityObj = new Utility;
+    return $utilityObj->returnValue('/manage/groups', $write);
+  }
+
+  public function managePhotos($write = true)
+  {
+    $utilityObj = new Utility;
+    return $utilityObj->returnValue('/manage/photos', $write);
+  }
+
+  public function manageSettings($write = true)
+  {
+    $utilityObj = new Utility;
+    return $utilityObj->returnValue('/manage/settings', $write);
+  }
+
   public function photoDelete($id, $write = true)
   {
     $utilityObj = new Utility;
@@ -43,12 +91,12 @@ class Url
   {
     $utilityObj = new Utility;
     $options = preg_replace('#/page-\d+#', '', $options);
-    $noOptionsStr = '/photo/%s/view';
-    $optionsStr = '/photo/%s/%s/view';
-    if(isset($_SERVER['REDIRECT_URL']) && preg_match('#^/p/#', $_SERVER['REDIRECT_URL']))
+    $noOptionsStr = '/p/%s';
+    $optionsStr = '/p/%s/%s';
+    if(isset($_SERVER['REDIRECT_URL']) && preg_match('#^/photo/#', $_SERVER['REDIRECT_URL']))
     {
-      $noOptionsStr = '/p/%s';
-      $optionsStr = '/p/%s/%s';
+      $noOptionsStr = '/photo/%s/view';
+      $optionsStr = '/photo/%s/%s/view';
     }
       
     if(empty($options))
@@ -78,6 +126,12 @@ class Url
     return $utilityObj->returnValue('/photos/upload', $write);
   }
 
+  public function setup($write = true)
+  {
+    $utilityObj = new Utility;
+    return $utilityObj->returnValue('/setup', $write);
+  }
+
   public function tagsView($write = true)
   {
     $utilityObj = new Utility;
@@ -89,7 +143,7 @@ class Url
     $utilityObj = new Utility;
     $ret = array();
     foreach($tags as $tag)
-      $ret[] = sprintf('<a href="%s">%s</a>', self::photosView("tags-{$tag}", false), $utilityObj->safe($tag, false));
+      $ret[] = sprintf('<a href="%s">%s</a>', $this->photosView("tags-{$tag}", false), $utilityObj->safe($tag, false));
 
     return $utilityObj->returnValue(implode(', ', $ret), $write);
   }
@@ -100,9 +154,14 @@ class Url
     return $utilityObj->returnValue('/user/logout', $write);
   }
 
-  public function userSettings($write = true)
+  public function userManage($write = true)
   {
     $utilityObj = new Utility;
-    return $utilityObj->returnValue('/user/settings', $write);
+    return $utilityObj->returnValue('/manage', $write);
+  }
+
+  public function userSettings($write = true)
+  {
+    return $this->userManage($write);
   }
 }

@@ -56,6 +56,7 @@ class GeneralController extends BaseController
     $apisToCall = getConfig()->get('frontApis');
     $params = $this->utility->callApis($apisToCall);
     $body = $this->theme->get($template, $params);
+    $this->plugin->setData('page', 'front');
     $this->theme->display($this->utility->getTemplate('template.php'), array('body' => $body, 'page' => 'front'));
   }
 
@@ -66,7 +67,7 @@ class GeneralController extends BaseController
     */
   public function maintenance()
   {
-    $this->theme->setTheme('default');
+    $this->theme->setTheme(); // defaults
     $this->theme->display($this->utility->getTemplate('maintenance.php'));
   }
 }

@@ -22,19 +22,17 @@
       <link rel="stylesheet" href="<?php echo getAssetPipeline(true)->addCss($this->theme->asset('stylesheet', 'bootstrap.min.css', false))->
                                                                   addCss("/assets/stylesheets/upload.css")->
                                                                   addCss($this->theme->asset('stylesheet', 'main.css', false))->
-                                                                  getUrl(AssetPipeline::css, 'g'); ?>">
+                                                                  getUrl(AssetPipeline::css, 'i'); ?>">
       <?php if(true || $this->user->isOwner()) { ?>
         <link rel="stylesheet" href="<?php echo getAssetPipeline(true)->addCss($this->theme->asset('stylesheet', 'owner.css', false))->
-                                                                  getUrl(AssetPipeline::css, 'b'); ?>">
+                                                                  getUrl(AssetPipeline::css, 'd'); ?>">
       <?php } ?>
     <?php } ?>
 
-    <?php $this->plugin->invoke('onHead', array('page' => $page)); ?>
+    <?php $this->plugin->invoke('renderHead'); ?>
 </head>
 
 <body class="<?php echo $page; ?>">
-  <?php $this->plugin->invoke('onBodyBegin', array('page' => $page)); ?>
-
   <div id="wrapper" class="container">
 
     <div class="row">
@@ -43,7 +41,7 @@
       </header>
     </div>
     
-    <div id="message" class="row"></div>
+    <div id="message"></div>
 
     <div class="row">
       <article id="main" role="main">
@@ -92,15 +90,22 @@
             'photo-thumbnail-click':'click:photo-thumbnail',
             'photo-update-click':'click:photo-update',
             'photo-update-batch-click':'click:photo-update-batch',
+            'pin-click':'click:pin',
+            'pin-clear-click':'click:pin-clear',
             'plugin-status-click':'click:plugin-status',
             'plugin-update-click':'click:plugin-update',
             'search-click':'click:search',
             'settings-click':'click:settings',
+<<<<<<< HEAD
             'webhook-delete-click':'click:webhook-delete',
             'pin-click':'click:pin',
             'pin-clear-click':'click:pin-clear',
             'pin-clearpage-click':'click:pin-clearpage',
             'pin-selectall-click':'click:pin-selectall'
+=======
+            'upload-start-click':'click:upload-start',
+            'webhook-delete-click':'click:webhook-delete'
+>>>>>>> upstream/master
         },
         <?php if($this->user->isOwner()) { ?>
           'change': {
@@ -121,7 +126,7 @@
               '/assets/javascripts/jquery.plupload.queue.js',
               '/assets/javascripts/openphoto-upload.js',
             <?php } else { ?>
-              '<?php echo getAssetPipeline(true)->addJs('/assets/javascripts/openphoto-upload.min.js')->getUrl(AssetPipeline::js, 'd'); ?>',
+              '<?php echo getAssetPipeline(true)->addJs('/assets/javascripts/openphoto-upload.min.js')->getUrl(AssetPipeline::js, 'f'); ?>',
             <?php } ?>
           <?php } ?>
 
@@ -135,7 +140,7 @@
           <?php } else { ?>
             '<?php echo getAssetPipeline(true)->addJs('/assets/javascripts/openphoto-batch.min.js')->
                                                 addJs($this->theme->asset('javascript', 'openphoto-theme-full-min.js', false))->
-                                                getUrl(AssetPipeline::js, 'f'); ?>'
+                                                getUrl(AssetPipeline::js, 'i'); ?>'
           <?php } ?>
         ],
         onComplete: function(){ 
@@ -148,6 +153,6 @@
       }
     });
   </script>
-  <?php $this->plugin->invoke('onBodyEnd', array('page' => $page)); ?>
+  <?php $this->plugin->invoke('renderFooter'); ?>
 </body>
 </html>

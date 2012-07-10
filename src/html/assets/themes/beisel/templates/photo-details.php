@@ -94,6 +94,8 @@
     <?php } ?>
   </ul>
 
+  <?php $this->plugin->invoke('renderPhotoDetail', $photo); ?>
+
   <p><strong>Photo details</strong></p>
   <ul class="meta">
     <li class="date"><span></span><?php $this->utility->dateLong($photo['dateTaken']); ?></li>
@@ -101,22 +103,20 @@
     <?php if(isset($photo['tags']) && !empty($photo['tags'])) { ?>
       <li class="tags"><span></span><?php $this->url->tagsAsLinks($photo['tags']); ?></li>
     <?php } ?>
-    <?php if(isset($photo['license']) && !empty($photo['license'])) { ?>
-      <li class="license"><span></span>
-        <?php if($this->utility->licenseLink($photo['license'], false)) { ?>
-          <a rel="license" href="<?php $this->utility->licenseLink($photo['license']); ?>">
-            <?php $this->utility->licenseLong($photo['license']); ?>
-          </a>
-        <?php } else { ?>
+    <li class="license"><span></span>
+      <?php if($this->utility->licenseLink($photo['license'], false)) { ?>
+        <a rel="license" href="<?php $this->utility->licenseLink($photo['license']); ?>">
           <?php $this->utility->licenseLong($photo['license']); ?>
-        <?php } ?>
-      </li>
-    <?php } ?>
+        </a>
+      <?php } else { ?>
+        <?php $this->utility->licenseLong($photo['license']); ?>
+      <?php } ?>
+    </li>
     <?php if(isset($photo['latitude']) && !empty($photo['latitude'])) { ?>
       <li class="location">
         <span></span>
-        <a href="http://maps.google.com/maps?q=<?php $this->utility->safe($photo['latitude']); ?>,<?php $this->utility->safe($photo['longitude']); ?>"><?php $this->utility->safe($photo['latitude']); ?>, <?php $this->utility->safe($photo['longitude']); ?></a>
-        <img src="<?php $this->utility->staticMapUrl($photo['latitude'], $photo['longitude'], 5, '255x150'); ?>" class="map">
+        <a href="<?php $this->utility->mapLinkUrl($photo['latitude'], $photo['longitude'], 5); ?>"><?php $this->utility->safe($photo['latitude']); ?>, <?php $this->utility->safe($photo['longitude']); ?>
+        <img src="<?php $this->utility->staticMapUrl($photo['latitude'], $photo['longitude'], 5, '255x150'); ?>" class="map"></a>
       </li>
     <?php } ?>
     <?php if(!empty($photo['exifCameraMake']) && !empty($photo['exifCameraMake'])) { ?>
@@ -138,12 +138,6 @@
     <?php } ?>
     <?php if(isset($photo['pathOriginal'])) { ?>
       <li class="original"><span></span><a href="<?php $this->utility->safe($photo['pathOriginal']); ?>">Download original</a></li>
-    <?php } ?>
-    <?php if($this->user->isOwner()) { ?>
-      <li class="edit">
-        <span></span>
-        <a href="<?php $this->url->photoEdit($photo['id']); ?>" class="button photo-edit-click">Edit this photo</a>
-      </li>
     <?php } ?>
   </ul>
 </aside>

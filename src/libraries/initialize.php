@@ -17,15 +17,29 @@ Epi::setPath('config', "{$basePath}/configs");
 Epi::setPath('view', '');
 Epi::init('api','cache','config','curl','form','logger','route','session','template','database');
 
+$routeObj = getRoute();
+$apiObj = getApi();
+
 // loads configs and dependencies
 $userConfigObj = new UserConfig;
 $hasConfig = $userConfigObj->load();
-
 $configObj = getConfig();
+
+// set log level
+$levels = (array)explode(',', $configObj->get('epi')->logLevels);
+call_user_func_array('EpiLogger::employ', $levels);
+
+// initialize session
 EpiCache::employ($configObj->get('epi')->cache);
 $sessionParams = array($configObj->get('epi')->session);
-if($configObj->get('epiSessionParams'))
+if($configObj->get('epiSessionParams')) {
   $sessionParams = array_merge($sessionParams, (array)$configObj->get('epiSessionParams'));
+  // for TLDs we need to override the cookie domain if specified
+  if(isset($sessionParams['domain']) && stristr($_SERVER['HTTP_HOST'], $sessionParams['domain']) === false)
+    $sessionParams['domain'] = $_SERVER['HTTP_HOST'];
+
+  $sessionParams = array_values($sessionParams); // reset keys
+}
 EpiSession::employ($sessionParams);
 getSession();
 
@@ -56,9 +70,10 @@ if($hasConfig && !$runSetup)
     $runUpgrade = true;
   require $configObj->get('paths')->libraries . '/routes.php';
 
+  Request::setApiVersion();
+
   // initializes plugins
   getPlugin()->load();
-  getPlugin()->invoke('onLoad');
 }
 else
 {
@@ -90,5 +105,8 @@ else
   // Before we run the setup in edit mode, we need to validate ownership
   $userObj = new User;
   if(isset($_GET['edit']) && !$userObj->isOwner())
-    getRoute()->run('/error/403');
+  {
+    $routeObj->run('/error/403');
+    die();
+  }
 }

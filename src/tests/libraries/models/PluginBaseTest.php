@@ -1,9 +1,4 @@
 <?php
-$baseDir = dirname(dirname(dirname(dirname(__FILE__))));
-require_once sprintf('%s/tests/helpers/init.php', $baseDir);
-require_once sprintf('%s/libraries/models/BaseModel.php', $baseDir);
-require_once sprintf('%s/libraries/models/PluginBase.php', $baseDir);
-
 class PluginBaseTest extends PHPUnit_Framework_TestCase
 {
   public function setUp()
@@ -22,12 +17,10 @@ class PluginBaseTest extends PHPUnit_Framework_TestCase
     $this->markTestIncomplete('This test has not been implemented yet.');
   }
 
-  /**
-   * @expectedException PHPUnit_Framework_Error
-   */
   public function testOnActionNoParam()
   {
     $res = $this->pluginBase->onAction();
+    $this->assertNull($res);
   }
 
   public function testOnActionSuccess()
@@ -36,60 +29,16 @@ class PluginBaseTest extends PHPUnit_Framework_TestCase
     $this->assertNull($res);
   }
 
-  public function testOnBodyBeginNoParam()
+  public function testRenderHeadNoParam()
   {
-    $res = $this->pluginBase->onBodyBegin();
+    $res = $this->pluginBase->renderHead();
     $this->assertNull($res);
   }
 
-  public function testOnBodyBeginSuccess()
+  public function testRenderHeadSuccess()
   {
-    $res = $this->pluginBase->onBodyBegin(array());
+    $res = $this->pluginBase->RenderHead(array());
     $this->assertNull($res);
-  }
-
-  public function testOnBodyEndNoParam()
-  {
-    $res = $this->pluginBase->onBodyEnd();
-    $this->assertNull($res);
-  }
-
-  public function testOnBodyEndSuccess()
-  {
-    $res = $this->pluginBase->onBodyEnd(array());
-    $this->assertNull($res);
-  }
-
-  public function testOnHeadNoParam()
-  {
-    $res = $this->pluginBase->onHead();
-    $this->assertNull($res);
-  }
-
-  public function testOnHeadSuccess()
-  {
-    $res = $this->pluginBase->onHead(array());
-    $this->assertNull($res);
-  }
-
-  public function testOnLoadNoParam()
-  {
-    $res = $this->pluginBase->onLoad();
-    $this->assertNull($res);
-  }
-
-  public function testOnLoadSuccess()
-  {
-    $res = $this->pluginBase->onLoad(array());
-    $this->assertNull($res);
-  }
-
-  /**
-   * @expectedException PHPUnit_Framework_Error
-   */
-  public function testOnViewNoParam()
-  {
-    $res = $this->pluginBase->onView();
   }
 
   public function testOnViewSuccess()

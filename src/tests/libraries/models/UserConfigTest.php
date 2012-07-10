@@ -1,14 +1,4 @@
 <?php
-$paths = (array)explode(PATH_SEPARATOR, ini_get('include_path'));
-foreach($paths as $path)
-{
-  if(file_exists("{$path}/vfsStream/vfsStream.php"))
-    require_once 'vfsStream/vfsStream.php';
-}
-$baseDir = dirname(dirname(dirname(dirname(__FILE__))));
-require_once sprintf('%s/tests/helpers/init.php', $baseDir);
-require_once sprintf('%s/libraries/models/UserConfig.php', $baseDir);
-
 class UserConfigWrapper extends UserConfig
 {
   public function __construct($params = null)
@@ -24,6 +14,16 @@ class UserConfigWrapper extends UserConfig
 
 class UserConfigTest extends PHPUnit_Framework_TestCase
 {
+  /**
+   * @var UserConfigWrapper
+   */
+  protected $userConfig;
+
+  /**
+   * @var string
+   */
+  protected $userConfigDir;
+
   public function setUp()
   {
     if(class_exists('vfsStream'))
@@ -124,16 +124,22 @@ class UserConfigTest extends PHPUnit_Framework_TestCase
   public function testWriteSiteSettingSuccess()
   {
     file_put_contents($configFile = "{$this->userConfigDir}/userdata/configs/example.com.ini", "[stuff]\nfoo=bar");
-    $utility = $this->getMock('User', array('generateIniString'));
+    $utility = $this->getMock('utility', array('generateIniString'));
     $utility->expects($this->any())
       ->method('generateIniString')
       ->will($this->returnValue('foobar'));
+    $config = $this->getMock('config', array('write','exists'));
+    $config->expects($this->any())
+      ->method('write')
+      ->will($this->returnValue(true));
+    $config->expects($this->any())
+      ->method('exists')
+      ->will($this->returnValue(true));
+    $this->userConfig->inject('config', $config);
     $this->userConfig->inject('utility', $utility);
 
     $res = $this->userConfig->writeSiteSettings(array('foo'));
-    $this->assertEquals(6, $res);
-    $writtenFile = file_get_contents($configFile);
-    $this->assertEquals('foobar', $writtenFile);
+    $this->assertEquals(true, $res);
   }
 
   public function testLoad()

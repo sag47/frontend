@@ -6,6 +6,8 @@
  */
 class ApiBaseController
 {
+  protected $apiVersion;
+
   /**
    * Status constants
    */
@@ -24,9 +26,22 @@ class ApiBaseController
     $this->plugin = getPlugin();
     $this->route = getRoute();
     $this->session = getSession();
+    $this->logger = getLogger();
     $this->template = getTemplate();
+    $this->theme = getTheme();
     $this->utility = new Utility;
     $this->url = new Url;
+
+    $this->template->template = $this->template;
+    $this->template->config = $this->config;
+    $this->template->plugin = $this->plugin;
+    $this->template->session = $this->session;
+    $this->template->theme = $this->theme;
+    $this->template->utility = $this->utility;
+    $this->template->url = $this->url;
+    $this->template->user = new User;
+
+    $this->apiVersion = Request::getApiVersion();
   }
 
   /**
@@ -163,6 +178,9 @@ class ApiBaseController
         break;
       case '404':
         $header = 'HTTP/1.0 404 Not Found';
+        break;
+      case '409':
+        $header = 'HTTP/1.0 409 Conflict';
         break;
       case '500':
         $header = 'HTTP/1.0 500 Internal Server Error';
